@@ -22,18 +22,18 @@ public class LoginPage extends BasePage{
         open(ConfigReader.getProperty("base.url"));
     }
 
-    public void inputCredentials (String username, String password){
+    public void enterCredentials (String username, String password){
         type(usernameField, username);
         type(passwordField, password);
     }
 
     public void login(String username, String password) {
-        inputCredentials(username, password);
+        enterCredentials(username, password);
         clickLoginButton(loginButton);
 
     }
 
-    public String getLoginErrorTxt (){
+    public String getLoginErrorMessage (){
         return find(errorMessage).getText();
     }
 
