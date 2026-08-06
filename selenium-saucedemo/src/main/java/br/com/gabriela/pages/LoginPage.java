@@ -1,54 +1,37 @@
 package br.com.gabriela.pages;
 
 import br.com.gabriela.config.ConfigReader;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import br.com.gabriela.elements.LoginPageElements;
 
-import java.time.Duration;
-
-
-public class LoginPage extends BasePage{
-
-    private final By usernameField = By.id("user-name");
-    private final By passwordField = By.id("password");
-    private final By loginButton = By.id("login-button");
-    private final By errorMessage = By.cssSelector("[data-test='error']");
-    private final By closeErrorMsgButton = By.cssSelector("[data-test='error-button']");
+public class LoginPage extends BasePage {
 
     public void open() {
         open(ConfigReader.getProperty("base.url"));
     }
 
-    public void enterCredentials (String username, String password){
-        type(usernameField, username);
-        type(passwordField, password);
+    public void enterCredentials(String username, String password) {
+        type(LoginPageElements.USERNAME_INPUT, username);
+        type(LoginPageElements.PASSWORD_INPUT, password);
     }
 
     public void login(String username, String password) {
         enterCredentials(username, password);
-        clickLoginButton(loginButton);
-
+        clickLoginButton(LoginPageElements.LOGIN_BUTTON);
     }
 
-    public String getLoginErrorMessage (){
-        return find(errorMessage).getText();
+    public String getLoginErrorMessage() {
+        return find(LoginPageElements.ERROR_MESSAGE).getText();
     }
 
-    public void closeErrorMessage (){
-        find(closeErrorMsgButton).click();
+    public void closeErrorMessage() {
+        find(LoginPageElements.CLOSE_ERROR_BUTTON).click();
     }
 
-    public boolean isErrorMessageDisplayed (){
-        return !driver.findElements(errorMessage).isEmpty();
+    public boolean isErrorMessageDisplayed() {
+        return !driver.findElements(LoginPageElements.ERROR_MESSAGE).isEmpty();
     }
 
     public String getPasswordFieldType() {
-        return driver.findElement(passwordField).getAttribute("type");
+        return find(LoginPageElements.PASSWORD_INPUT).getAttribute("type");
     }
-
-
-
 }
