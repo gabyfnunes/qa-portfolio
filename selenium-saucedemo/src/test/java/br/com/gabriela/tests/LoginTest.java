@@ -10,10 +10,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginTest {
-    LoginPage loginPage = new LoginPage();
+    private LoginPage loginPage; private InventoryPage inventoryPage;
 
-    @BeforeEach
-    void setUp (){
+    @BeforeEach void setUp() {
+        loginPage = new LoginPage();
+        inventoryPage = new InventoryPage();
         loginPage.open();
     }
 
@@ -93,11 +94,12 @@ public class LoginTest {
     }
 
     @Test
-    void naoDevePermitirAcessoAoInventarioSemLogin() {
-        InventoryPage inventoryPage = new InventoryPage();
+    void shouldNotAllowInventoryAccessWithoutLogin() {
         inventoryPage.open();
 
-        assertEquals("Epic sadface: You can only access '/inventory.html' when you are logged in.", loginPage.getLoginErrorTxt()
+        assertEquals(
+                "Epic sadface: You can only access '/inventory.html' when you are logged in.",
+                loginPage.getLoginErrorTxt()
         );
     }
 
