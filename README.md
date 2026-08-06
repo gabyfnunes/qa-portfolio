@@ -248,7 +248,7 @@ https://github.com/gabyfnunes
 
 LinkedIn:
 
-*(coming soon)*
+(https://www.linkedin.com/in/gabriela-de-freitas-nunes/)
 
 ---
 
