@@ -3,7 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,10 +13,12 @@
 
     <properties>
 
+        <!-- Java -->
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- Dependencies -->
         <selenium.version>4.35.0</selenium.version>
         <webdrivermanager.version>6.2.0</webdrivermanager.version>
 
@@ -25,7 +27,26 @@
 
         <cucumber.version>7.23.0</cucumber.version>
 
+        <allure.version>2.35.3</allure.version>
+
     </properties>
+
+    <!-- Controls Allure dependency versions -->
+    <dependencyManagement>
+
+        <dependencies>
+
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${allure.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
 
     <dependencies>
 
@@ -51,7 +72,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Cucumber -->
+        <!-- Cucumber Java -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -59,6 +80,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Cucumber + JUnit Platform -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
@@ -74,16 +96,74 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Allure integration with Cucumber -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
 
         <plugins>
 
+            <!-- Executes automated tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
+            </plugin>
+
+            <!-- Copies environment.properties to Allure results -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+
+                <executions>
+
+                    <execution>
+
+                        <id>copy-allure-environment</id>
+
+                        <phase>process-test-resources</phase>
+
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+
+                            <outputDirectory>
+                                ${project.build.directory}/allure-results
+                            </outputDirectory>
+
+                            <resources>
+
+                                <resource>
+
+                                    <directory>
+                                        src/test/resources
+                                    </directory>
+
+                                    <includes>
+                                        <include>
+                                            environment.properties
+                                        </include>
+                                    </includes>
+
+                                </resource>
+
+                            </resources>
+
+                        </configuration>
+
+                    </execution>
+
+                </executions>
+
             </plugin>
 
         </plugins>
