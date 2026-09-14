@@ -1,9 +1,14 @@
 package br.com.gabriela.pages;
 
 import br.com.gabriela.elements.CartPageElements;
+import br.com.gabriela.elements.CheckoutPageElements;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 import java.util.List;
+import org.openqa.selenium.TimeoutException;
 
 public class CartPage extends BasePage{
     private static final String CART_URL =
@@ -40,15 +45,26 @@ public class CartPage extends BasePage{
     }
 
     public boolean cartProductHasName() {
-        List<WebElement> names =
-                driver.findElements(
-                        CartPageElements.CART_ITEM_NAME
-                );
 
-        return !names.isEmpty()
-                && names.stream()
-                .allMatch(element ->
-                        !element.getText().isBlank());
+        WebDriverWait wait = new WebDriverWait(
+                driver,
+                Duration.ofSeconds(10)
+        );
+
+        return wait
+                .ignoring(StaleElementReferenceException.class)
+                .until(d -> {
+
+                    List<WebElement> names =
+                            d.findElements(
+                                    CartPageElements.CART_ITEM_NAME
+                            );
+
+                    return !names.isEmpty()
+                            && names.stream()
+                            .allMatch(element ->
+                                    !element.getText().isBlank());
+                });
     }
 
     public boolean cartProductHasDescription() {
@@ -97,8 +113,41 @@ public class CartPage extends BasePage{
     }
 
     public void checkout() {
-        find(
-                CartPageElements.CHECKOUT_BUTTON
-        ).click();
+
+        WebDriverWait wait = new WebDriverWait(
+                driver,
+                Duration.ofSeconds(10)
+        );
+
+        WebElement checkoutButton = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        CartPageElements.CHECKOUT_BUTTON
+                )
+        );
+
+        checkoutButton.click();
+
+        try {
+            wait.until(
+                    ExpectedConditions.urlContains(
+                            "checkout-step-one.html"
+                    )
+            );
+        } catch (TimeoutException e) {
+
+            checkoutButton = wait.until(
+                    ExpectedConditions.elementToBeClickable(
+                            CartPageElements.CHECKOUT_BUTTON
+                    )
+            );
+
+            checkoutButton.click();
+
+            wait.until(
+                    ExpectedConditions.urlContains(
+                            "checkout-step-one.html"
+                    )
+            );
+        }
     }
 }

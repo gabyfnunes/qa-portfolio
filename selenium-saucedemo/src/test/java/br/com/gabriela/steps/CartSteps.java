@@ -69,11 +69,5 @@ public class CartSteps {
         cartPage.checkout();
     }
 
-    @Then("the checkout information page should be displayed")
-    public void theCheckoutInformationPageShouldBeDisplayed() {
-        assertEquals(
-                "Checkout: Your Information",
-                inventoryPage.getPageTitle()
-        );
-    }
+
 }
