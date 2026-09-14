@@ -19,6 +19,12 @@ public class LoginSteps {
         loginPage.open();
     }
 
+    @Given("the user is logged in")
+    public void theUserIsLoggedIn() {
+        loginPage.open();
+        loginPage.login("standard_user", "secret_sauce");
+    }
+
     @When("the user enters username {string} and password {string}")
     public void theUserEntersUsernameAndPassword(String username, String password) {
         loginPage.login(username, password);
