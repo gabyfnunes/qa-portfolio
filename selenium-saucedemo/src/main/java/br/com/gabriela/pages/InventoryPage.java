@@ -194,4 +194,7 @@ public class InventoryPage extends BasePage {
                 .map(Double::parseDouble)
                 .collect(Collectors.toList());
     }
+    public void openCart() {
+        find(InventoryPageElements.INVENTORY_CART_BTN).click();
+    }
 }
